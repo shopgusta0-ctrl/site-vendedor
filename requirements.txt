@@ -1,0 +1,42 @@
+import streamlit as st
+# IMPORTANTE: Aqui puxamos a lista que está no outro arquivo
+from produtos import lista_de_produtos 
+
+# Configuração visual da página
+st.set_page_config(page_title="Vitrine Automática de Achadinhos", page_icon="🔥", layout="wide")
+
+# Estilização CSS
+st.markdown("""
+    <style>
+    .titulo { text-align: center; font-size: 42px; font-weight: bold; color: #1E1E1E; margin-bottom: 5px; }
+    .subtitulo { text-align: center; font-size: 18px; color: #666666; margin-bottom: 40px; }
+    .card { background-color: #F8F9FA; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; min-height: 400px; }
+    .nome-produto { font-size: 18px; font-weight: bold; color: #333333; margin-top: 15px; height: 50px; display: flex; align-items: center; justify-content: center; }
+    .preco { font-size: 26px; font-weight: bold; color: #2E7D32; margin: 10px 0; }
+    .badge-app { background-color: #FFF3E0; color: #E65100; font-weight: bold; padding: 5px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 15px; border: 1px solid #FFE0B2; }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("<div class='titulo'>🔥 VITRINE AUTOMÁTICA</div>", unsafe_allow_html=True)
+st.markdown(f"<div class='subtitulo'>Mostrando {len(lista_de_produtos)} produtos achados na internet!</div>", unsafe_allow_html=True)
+
+# SISTEMA AUTOMÁTICO DE COLUNAS:
+# Divide a lista gigante em grupos de 3 produtos para criar as linhas da página
+for i in range(0, len(lista_de_produtos), 3):
+    grupo_produtos = lista_de_produtos[i:i+3]
+    colunas = st.columns(3)
+    
+    for indice, prod in enumerate(grupo_produtos):
+        with colunas[indice]:
+            st.markdown(f"""
+                <div class='card'>
+                    <p style='color: #FF9800; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 0;'>{prod['categoria']}</p>
+                    <div class='nome-produto'>{prod['nome']}</div>
+                    <div class='preco'>{prod['preco']}</div>
+                    <div class='badge-app'>{prod['app_mais_barato']}</div>
+                </div>
+            """, unsafe_allow_html=True)
+            st.image(prod['imagem'], use_container_width=True)
+            st.link_button("🛍️ Ver Oferta no Aplicativo", prod['link'], use_container_width=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True) # Espaço entre as linhas
